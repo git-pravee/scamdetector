@@ -3,16 +3,18 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from utils.scam_checker import detect_scam
 from flask_mail import Mail, Message
+from dotenv import load_dotenv
 
+# Load environment variables first
+load_dotenv()
 
 app = Flask(__name__)
 
+# Set secret key for session management and flash messages
+app.secret_key = os.getenv('SECRET_KEY') or 'fallback_secret_key'  # Always have fallback
 
-# Set the secret key for session management and flash messages
-app.secret_key = os.getenv('SECRET_KEY')  # Replace with your own secret key
-
-# Looking to send emails in production? Check out our Email API/SMTP product!
-app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
+# Mail configuration
+app.config['MAIL_SERVER'] = 'sandbox.smtp.mailtrap.io'
 app.config['MAIL_PORT'] = 2525
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
@@ -20,14 +22,12 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
 
-
-
-# Initialize Flask-Mail
 mail = Mail(app)
+
+# Test mail sending inside app context
 with app.app_context():
     try:
         msg = Message("Test Email",
-                      sender=app.config['MAIL_USERNAME'],
                       recipients=["2ef878f498-7f67c8+user1@inbox.mailtrap.io"])
         msg.body = "This is a test email from ScamShield app using Mailtrap."
         mail.send(msg)
@@ -36,40 +36,18 @@ with app.app_context():
         print("❌ Failed to send email:", e)
 
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
+# Scam keywords regex pattern
 SCAM_KEYWORDS = [
-    "registration fee",
-    "processing fee",
-    "pay to apply",
-    "money upfront",
-    "investment required",
-    "payment",
-    "bank details",
-    "transaction",
-    "fee"
+    "registration fee", "processing fee", "pay to apply", "money upfront",
+    "investment required", "payment", "bank details", "transaction", "fee"
 ]
-
-TRUSTED_COMPANIES = [
-    "google",
-    "microsoft",
-    "amazon",
-    "facebook",
-    "apple",
-    "intel",
-    "ibm"
-]
-
-# Compile scam keywords into a regex pattern for full word, case-insensitive search
 scam_pattern = re.compile(
     r'\b(' + '|'.join(re.escape(kw) for kw in SCAM_KEYWORDS) + r')\b', re.IGNORECASE
 )
 
-from flask import flash
-
-from flask import flash, redirect, render_template, request
+TRUSTED_COMPANIES = [
+    "google", "microsoft", "amazon", "facebook", "apple", "intel", "ibm"
+]
 
 @app.route('/check', methods=['GET', 'POST'])
 def check():
@@ -92,8 +70,6 @@ def check():
     return render_template("check.html")
 
 
-
-
 @app.route("/report", methods=["GET", "POST"])
 def report():
     if request.method == "POST":
@@ -102,7 +78,6 @@ def report():
         evidence_link = request.form.get("evidence", "").strip()
         scam_details = request.form.get("details", "").strip()
 
-        # If any required fields are missing, flash an error and reload
         if not job_title or not reporter_email or not scam_details:
             flash("❌ Please fill in all required fields: Job Title, Email, and Scam Details.", "error")
             return redirect(url_for("report"))
@@ -119,6 +94,9 @@ Evidence Link: {evidence_link if evidence_link else 'None'}
 
 This scam report was submitted via the ScamShield reporting form.
 """
+
+        # Prepare formatted scam details for HTML email
+        scam_details_html = scam_details.replace('\n', '<br>')
 
         html_body = f"""
         <!DOCTYPE html>
@@ -160,11 +138,8 @@ This scam report was submitted via the ScamShield reporting form.
             <p><strong>Job Title:</strong> {job_title}</p>
             <p><strong>Reporter Email:</strong> {reporter_email}</p>
             <p><strong>Scam Details:</strong></p>
-            scam_details_html = scam_details.replace('\n', '<br>')
             <p>{scam_details_html}</p>
-
             <p><strong>Evidence Link:</strong> {evidence_link if evidence_link else 'None'}</p>
-
             <div class="footer">
               <p>This scam report was submitted via the ScamShield reporting form.</p>
             </div>
@@ -176,7 +151,6 @@ This scam report was submitted via the ScamShield reporting form.
         try:
             msg = Message(
                 subject="🚨 New Scam Report",
-                sender=app.config['MAIL_USERNAME'],
                 recipients=["2ef878f498-7f67c8+user1@inbox.mailtrap.io"]  # Change as needed
             )
             msg.body = plain_body
@@ -193,24 +167,6 @@ This scam report was submitted via the ScamShield reporting form.
     return render_template("report.html")
 
 
-@app.route('/tips')
-def tips():
-    return render_template('tips.html')
-
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
-
-@app.route('/faq')
-def faq():
-    return render_template('faq.html')
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-from flask import redirect, url_for, request, render_template
-
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
@@ -219,13 +175,14 @@ def contact():
         subject = request.form["subject"]
         message = request.form["message"]
 
+        # Format message for HTML
+        formatted_message = (message or '').replace('\n', '<br>')
+
         msg = Message(
             subject=f"ScamShield Contact: {subject}",
-            sender=app.config['MAIL_USERNAME'],
             recipients=["2ef878f498-7f67c8+user1@inbox.mailtrap.io"],
             body=f"Name: {name}\nUser Email: {email}\n\nMessage:\n{message}"
         )
-
         msg.html = f"""
         <!DOCTYPE html>
         <html>
@@ -267,9 +224,7 @@ def contact():
             <p><strong>Email:</strong> {email}</p>
             <p><strong>Subject:</strong> {subject}</p>
             <p><strong>Message:</strong></p>
-            formatted_message = (message or '').replace('\n', '<br>')
             <p>{formatted_message}</p>
-
             <div class="footer">
               <p>This message was sent via the ScamShield contact form.</p>
             </div>
@@ -289,9 +244,7 @@ def contact():
 
     return render_template("contact.html")
 
+
 if __name__ == '__main__':
-    from dotenv import load_dotenv
-    load_dotenv()
-    
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
