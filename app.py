@@ -3,15 +3,13 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from utils.scam_checker import detect_scam
 from flask_mail import Mail, Message
-from dotenv import load_dotenv
 
-load_dotenv # load environment variables from .env file
 
 app = Flask(__name__)
 
 
 # Set the secret key for session management and flash messages
-app.secret_key = 'my$ecretK3y123!@#'  # Replace with your own secret key
+app.secret_key = os.getenv('SECRET_KEY')  # Replace with your own secret key
 
 # Looking to send emails in production? Check out our Email API/SMTP product!
 app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
@@ -20,6 +18,8 @@ app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
+
 
 
 # Initialize Flask-Mail
@@ -290,4 +290,8 @@ def contact():
     return render_template("contact.html")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
