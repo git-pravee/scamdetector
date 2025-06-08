@@ -160,7 +160,9 @@ This scam report was submitted via the ScamShield reporting form.
             <p><strong>Job Title:</strong> {job_title}</p>
             <p><strong>Reporter Email:</strong> {reporter_email}</p>
             <p><strong>Scam Details:</strong></p>
-            <p>{scam_details.replace('\n', '<br>')}</p>
+            scam_details_html = scam_details.replace('\n', '<br>')
+            <p>{scam_details_html}</p>
+
             <p><strong>Evidence Link:</strong> {evidence_link if evidence_link else 'None'}</p>
 
             <div class="footer">
@@ -265,7 +267,9 @@ def contact():
             <p><strong>Email:</strong> {email}</p>
             <p><strong>Subject:</strong> {subject}</p>
             <p><strong>Message:</strong></p>
-            <p>{(message or '').replace('\n', '<br>')}</p>
+            formatted_message = (message or '').replace('\n', '<br>')
+            <p>{formatted_message}</p>
+
             <div class="footer">
               <p>This message was sent via the ScamShield contact form.</p>
             </div>
