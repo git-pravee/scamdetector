@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <section class="page-header">
+    <h2>About Us</h2>
+    <p>Our mission is to protect job seekers from scams by providing a trusted platform to verify job and internship listings.</p>
+  </section>
+
+  <section class="about-section">
+    <div class="about-content">
+      <h3>🎯 Our Mission</h3>
+      <p>Scam Job & Internship Detector is built to empower individuals in identifying and reporting fake job offers. We aim to create a safer digital hiring environment for everyone.</p>
+
+      <h3>👥 Who We Are</h3>
+      <p>We are a team of developers, cybersecurity enthusiasts, and job safety advocates working to provide a free, easy-to-use, and intelligent solution to job scams.</p>
+
+      <h3>🔒 Why It Matters</h3>
+      <p>Every day, thousands fall victim to job scams. Our platform helps identify red flags, educates users, and allows the community to report fraudulent listings.</p>
+
+      <h3>🤝 Get Involved</h3>
+      <p>If you're a developer, volunteer, or researcher who wants to contribute, feel free to <a href="{{ url_for('contact') }}">reach out</a>.</p>
+    </div>
+  </section>
+{% endblock %}

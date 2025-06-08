@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <section class="page-header">
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <p>Find answers to the most common questions about scam detection.</p>
+  </section>
+
+  <section class="faq-section">
+    <div class="faq-item">
+      <button class="faq-question">❓ How does the scam detector work?</button>
+      <div class="faq-answer">
+        <p>We analyze job details using pattern matching and keyword detection, combined with community-reported data.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">❓ Can I report a suspicious job or internship?</button>
+      <div class="faq-answer">
+        <p>Yes. Use the "Report Scam" page to submit suspicious listings anonymously.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">❓ Is this service free?</button>
+      <div class="faq-answer">
+        <p>Absolutely! Our tool is free to use to help keep job seekers safe from fraud.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">❓ How can I verify a company myself?</button>
+      <div class="faq-answer">
+        <p>Always check official company websites, use platforms like LinkedIn, and avoid offers that sound too good to be true.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const questions = document.querySelectorAll('.faq-question');
+    questions.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        const answer = btn.nextElementSibling;
+        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+      });
+    });
+  </script>
+{% endblock %}

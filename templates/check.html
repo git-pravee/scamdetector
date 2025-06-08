@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <section class="page-header">
+    <h2>Check Job & Internship Listings</h2>
+    <p>Find verified and scam-free job or internship opportunities. Use our tool to verify listings and stay safe.</p>
+  </section>
+
+  <section class="job-check-form">
+    <form action="{{ url_for('check') }}" method="post">
+      <label for="job-title">Job Title or Company Name:</label>
+      <input
+        type="text"
+        id="job-title"
+        name="job_title"
+        placeholder="e.g., Software Intern at XYZ Corp"
+        required
+      >
+
+      <label for="job-desc">Job Description or Posting Link:</label>
+      <textarea
+        id="job-desc"
+        name="job_description"
+        rows="5"
+        placeholder="Paste the job description, details, or link here"
+        required
+      ></textarea>
+
+      <button type="submit" class="btn-primary" onclick="showSpinner()">Check Now</button>
+      <div id="spinner" class="spinner" style="display: none;"></div>
+
+    </form>
+  </section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert {{ category }}">{{ message|safe }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+  <script>
+  function showSpinner() {
+    document.getElementById('spinner').style.display = 'block';
+  }
+</script>
+
+{% endblock %}
+

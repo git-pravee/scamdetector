@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="page-header">
+  <h2 class="section-title">📣 Report a Scam</h2>
+  <p class="section-description">Found a suspicious job offer? Report it here and help others stay safe.</p>
+</section>
+
+<section class="report-form container">
+  <!-- flash messages inside the container -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('report') }}" class="report-form">
+    <div class="form-group">
+      <label for="job_title">Job Title</label>
+      <input type="text" id="job_title" name="job_title" placeholder="e.g., Work From Home Data Entry Job" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Your Email</label>
+      <input type="email" id="email" name="email" placeholder="e.g., you@example.com" required>
+    </div>
+
+    <div class="form-group">
+      <label for="evidence">Evidence Links (optional)</label>
+      <input type="url" id="evidence" name="evidence" placeholder="e.g., https://drive.google.com/your-screenshot">
+    </div>
+
+    <div class="form-group">
+      <label for="details">Describe the Scam</label>
+      <textarea id="details" name="details" rows="6" placeholder="Share how you found this scam, any messages, or red flags…" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Report</button>
+  </form>
+</section>
+{% endblock %}

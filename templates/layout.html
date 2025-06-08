@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Scam Job Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar container">
+            <div class="logo">🛡️ Scam Detector</div>
+
+            <!-- Hamburger Button -->
+            <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="nav-links" id="navLinks">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('check') }}">Check Job</a>
+                <a href="{{ url_for('report') }}">Report Scam</a>
+                <a href="{{ url_for('tips') }}">Tips</a>
+                <a href="{{ url_for('faq') }}">FAQ</a>
+                <a href="{{ url_for('about') }}">About</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2025 Scam Detector. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{ url_for('faq') }}">FAQ</a>
+                <a href="{{ url_for('report') }}">Report a Scam</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const links = document.getElementById('navLinks');
+            const toggle = document.getElementById('menuToggle');
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>

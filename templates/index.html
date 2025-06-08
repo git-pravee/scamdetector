@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="hero">
+    <h1>Welcome to <span class="highlight">ScamShield</span> 🛡️</h1>
+    <p>Your trusted tool to detect fake job and internship offers online.</p>
+    <a href="{{ url_for('tips') }}" class="btn">Start Learning</a>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <h3>🔎 Scam Detector</h3>
+        <p>Use smart filters to detect scam job listings based on keywords.</p>
+    </div>
+    <div class="feature-card">
+        <h3>📖 Learn to Identify</h3>
+        <p>Understand patterns, red flags, and tips to avoid fake offers.</p>
+    </div>
+    <div class="feature-card">
+        <h3>✅ Verified Sources</h3>
+        <p>Find trusted portals and real internship opportunities.</p>
+    </div>
+</section>
+{% endblock %}
