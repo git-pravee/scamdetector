@@ -10,6 +10,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
+
 # Set secret key for session management and flash messages
 app.secret_key = os.getenv('SECRET_KEY') or 'fallback_secret_key'  # Always have fallback
 
@@ -35,6 +36,9 @@ with app.app_context():
     except Exception as e:
         print("❌ Failed to send email:", e)
 
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 # Scam keywords regex pattern
 SCAM_KEYWORDS = [
@@ -166,6 +170,21 @@ This scam report was submitted via the ScamShield reporting form.
 
     return render_template("report.html")
 
+@app.route('/tips')
+def tips():
+    return render_template('tips.html')
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
