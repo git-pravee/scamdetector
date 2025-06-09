@@ -28,9 +28,13 @@ mail = Mail(app)
 # Test mail sending inside app context
 with app.app_context():
     try:
-        msg = Message("Test Email",
-                      recipients=["2ef878f498-7f67c8+user1@inbox.mailtrap.io"])
+        msg = Message(
+              subject="Test Email",
+              sender=os.getenv("MAIL_USERNAME"),  # ✅ Set sender manually
+              recipients=["2ef878f498-7f67c8+user1@inbox.mailtrap.io"]
+        )
         msg.body = "This is a test email from ScamShield app using Mailtrap."
+
         mail.send(msg)
         print("✅ Email sent successfully to Mailtrap inbox.")
     except Exception as e:
@@ -155,6 +159,7 @@ This scam report was submitted via the ScamShield reporting form.
         try:
             msg = Message(
                 subject="🚨 New Scam Report",
+                sender=os.getenv("MAIL_USERNAME"),
                 recipients=["2ef878f498-7f67c8+user1@inbox.mailtrap.io"]  # Change as needed
             )
             msg.body = plain_body
@@ -199,6 +204,7 @@ def contact():
 
         msg = Message(
             subject=f"ScamShield Contact: {subject}",
+            sender=os.getenv("MAIL_USERNAME"),
             recipients=["2ef878f498-7f67c8+user1@inbox.mailtrap.io"],
             body=f"Name: {name}\nUser Email: {email}\n\nMessage:\n{message}"
         )
